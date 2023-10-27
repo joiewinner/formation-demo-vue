@@ -41,7 +41,7 @@
     <h1 class="text-2xl uppercase font-semibold mt-3 text-center">Application 1</h1>
 
     <div class=" container mx-auto my-4 flex justify-between">
-      <input type="text" class="border border-gray-700 p-3 outline-none" placeholder="recherche..." :value="tools.search">
+      <input type="text" class="border border-gray-700 p-3 outline-none" placeholder="recherche..." v-model="tools.search">
       <button @click="openModal" class="bg-blue-500 p-3 text-white ">Ajouter un membre</button>
     </div>
 
@@ -61,6 +61,7 @@ let Users = ref(UsersData)
 let tools = {
   "titre": "Ajouter un membre",
   "isUpdate": false,
+  "index": 0,
   "bouton": "Ajouter",
   "search": ""
 }
@@ -114,7 +115,7 @@ function vider(){
 
 function ajouter(){
   if (formUser.name != "" && formUser.username != "" && formUser.email != "" && formUser.phone != "") {
-    if (tools.isUpdate) {
+    if (!tools.isUpdate) {
       const id = Math.floor(Math.random() * 1000)
       formUser.id = id
       let user = {}
@@ -128,9 +129,8 @@ function ajouter(){
       alert("Membre ajoute " + JSON.stringify(user))
       vider()
     } else {
-      let copyUser = { ...formUser }
-      //Users.value.
-      alert("Membre modifie " + JSON.stringify(copyUser))
+      Users.value[tools.index] = { ...formUser }
+      alert("Membre modifie " + JSON.stringify(formUser))
       close()
     }
     
@@ -151,6 +151,7 @@ function editData(index, data){
   tools.titre = "Modifier un membre"
   tools.isUpdate = true
   tools.bouton = "Modifier"
+  tools.index = index
   formUser.id = data.id
   formUser.name = data.name
   formUser.username = data.username
